@@ -42,13 +42,13 @@ async function uploadVideo(idvideo){
                            
                 
                 <Card  >
-                <iframe className="embed-responsive-item VideoOnly" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+                <iframe className="embed-responsive-item VideoOnly" src={video.Video} allowfullscreen></iframe>
                 <Card.Body>
                 <Card.Title>{video.Title}</Card.Title>
                 <Card.Text>
                     {video.Description}
                 </Card.Text>
-                <Button variant="primary" onClick={()=>{history.push('/dashboard')}}>Cerrar</Button>
+                <Button id="ButtonCardOnly" variant="primary" onClick={()=>{history.push('/dashboard')}}>Cerrar</Button>
                  </Card.Body>
                 </Card>
                 </div>

@@ -28,26 +28,29 @@ function App() {
         password: '',
         error: '',
         isLoading: false,
-        isLogged: loginData !== "" ? true : false,
+        nameUser:loginData !== "" ? loginData.name : "María Beatriz Vivanco",
+        isLogged: loginData !== "" ? true : true,
         token: loginData !== "" ? loginData.token : ''
     }
 
     const [ state, setState ] = useState(INITIAL_STATE);
-	const { isLogged } = state;
+	//const { isLogged } = state;
 
     const tryLogin = () => {
             //e.preventDeffault();
+            
             signInWithPopup(auth, provider)
                 .then((result) => {
                     // This gives you a Google Access Token. You can use it to access the Google API.
                     const credential = GoogleAuthProvider.credentialFromResult(result);
                     const token = credential.accessToken;
                     // The signed-in user info.
-                    const result1=result;
+                    
                     const user = result.user;
                     console.log(user)
                     console.log(token)
-                    //localStorage.setItem("login_data", JSON.stringify({user, token: token}));
+                    
+                    localStorage.setItem("login_data", JSON.stringify({user: user, token: token}));
                 })
                 .catch((error) => {
                         // Handle Errors here.
@@ -64,7 +67,7 @@ function App() {
                     });}
 
         return(
-            <div className="App">
+            <appContext.Provider value={state}>
                 <Router>
                 
                 {/* Route Switch */}
@@ -73,10 +76,10 @@ function App() {
                         <Route exact path='/'> <Redirect from='/' to='/dashboard' /> </Route>
                         <Route path='/dashboard' > <Dashboard tryLogin={tryLogin}/> </Route>
                         <Route path='/videoonly/:idvideo' ><VideoOnly></VideoOnly></Route>
-                         <Route component={NotfoundPage}/>
+                        <Route component={NotfoundPage}/>
                 </Switch>
                 </Router>
-            </div>
+            </appContext.Provider>
     
     )}
 

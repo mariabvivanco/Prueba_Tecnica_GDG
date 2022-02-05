@@ -5,6 +5,10 @@
     height: 100%;
     width: 100%;
     margin-top: 0;
+    background-size: 100%;
+    background-repeat:no-repeat; 
+    background-size: cover;
+    overflow-x: hidden;
   }
 
 .Dashboard{
@@ -16,6 +20,34 @@
     border-color: transparent;
     
   }
+
+  h2#title{
+    margin-top: 3%;
+    margin-left: 3%;
+    padding-left:0%; 
+    padding-right: 0%;
+    text-align: left;
+}
+
+span#student{
+  color:#61dafb
+}
+
+#init{
+  margin-top: 5%;
+  border: transparent;
+  border-radius: 16px;
+
+}
+
+#add{
+    background-color: #61dafb;
+    color:white;
+    font-weight: bold;
+    border: transparent;
+    border-radius: 20px;
+
+}
 
 
   .AddVideo{

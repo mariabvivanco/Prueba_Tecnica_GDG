@@ -9,6 +9,8 @@ import { getStorage, uploadBytes } from "firebase/storage";
 import { ref as refStorage, getDownloadURL } from "firebase/storage";
 import { doc, getFirestore, setDoc, addDoc,collection, getDocs } from "firebase/firestore";
 import "../styles/Dashboard.css"
+import {appContext} from "../App"
+import { FcGoogle } from "@react-icons/all-files/fc/FcGoogle";
 
 const Dashboard=({tryLogin}) =>{
     const { Content, Footer } = Layout;
@@ -19,6 +21,9 @@ const Dashboard=({tryLogin}) =>{
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const {isLogged} = useContext(appContext);
+    const {nameUser} = useContext(appContext);
 
     const countrylist =  ['Estados Unidos', 'Rusia', 'China', 'Alemania', 'Reino Unido', 'Francia','Canadá', 'Suiza', 
     'Australia', 'Turquía', 'Italia', 'España', 'Suiza','Bélgica', 'Brasil', 'Chile', 'Venezuela', 'Cuba', 'Argentina',
@@ -48,39 +53,21 @@ const Dashboard=({tryLogin}) =>{
     const videoRef = useRef();
 
     async function changeVideo(video, e){
-       // Create a root reference
+       
         const storage = getStorage();
 
-        // Create a reference to 'mountains.jpg'
-        //const mountainsRef = ref(storage, 'mountains.jpg');
-
-        // Create a reference to 'images/mountains.jpg'
-        //const mountainImagesRef = ref(storage, 'images/mountains.jpg');
-
-        // While the file names are the same, the references point to different files
-        //mountainsRef.name === mountainImagesRef.name;           // true
-        //mountainsRef.fullPath === mountainImagesRef.fullPath;   // false 
-
-        //var reader = new FileReader();
-        //var fileByteArray = [];
-        //reader.readAsArrayBuffer(video);
-        //reader.onloadend = function (evt) {
-        //    if (evt.target.readyState == FileReader.DONE) {
-        //    var arrayBuffer = evt.target.result,
-        //        array = new Uint8Array(arrayBuffer);
-        //    for (var i = 0; i < array.length; i++) {
-        //        fileByteArray.push(array[i]);
-        //        }
-        //    }
-        //}
         const storageRef = refStorage(storage, 'videos/'+video.name);
-        const y = await getDownloadURL(storageRef)
-        console.log(y)
+        
         
         // 'file' comes from the Blob or File API
         uploadBytes(storageRef, video).then((snapshot) => {
             
         });
+        const url = await getDownloadURL(storageRef);
+        console.log(url)
+        const tempVideo = newVideo;
+        tempVideo.videoUrl = url;
+        setNewVideo(tempVideo);
       
         setVideoSelect(true)
         
@@ -141,14 +128,20 @@ const Dashboard=({tryLogin}) =>{
             
             <div class='row'>
                 <div class ='row'>
-                    <div class='col-3'>
+                    <div class='col-7'>
+                        <div id="title">
+                                <h2 id="title">VideoBlog<span id="student">|Cocina</span></h2>
+                                                                                          
+                        </div>
 
                     </div>
-                    <div class='col-7'>
+                    <div class='col-3'>
                         
                     </div>
                     <div class='col-2'>
-                        <button onClick={()=>tryLogin()}>Inicia Sesión</button>
+                        {!isLogged ? 
+                            <button id="init" onClick={()=>tryLogin()}><FcGoogle></FcGoogle>  Inicia Sesión en Google</button>
+                            :<label id="initname" >{nameUser}</label>}
                     </div>
                     
 
@@ -161,7 +154,7 @@ const Dashboard=({tryLogin}) =>{
                         
                     </div>
                     <div class='col-1'>
-                    <Button variant="primary" onClick={()=>{handleShow()
+                    <Button id="add" variant="primary" onClick={()=>{handleShow()
                     }}>
                     
                         +
@@ -183,23 +176,37 @@ const Dashboard=({tryLogin}) =>{
                                 <label class="label" >Título</label>
                                                 <input name="title" id="entry" type="text" ref={titleRef}  placeholder="Ej: Receta de Cerdo Asado"
                                                 onChange={(event)=>{
+                                                    const tempVideo = newVideo;
+                                                    tempVideo.title = event.target.value;
+                                                    setNewVideo(tempVideo);
                                                   }}
                                                 />
                                  <label class="label" >Descripción</label>
                                                 <input name="title" id="entry" type="text" ref={descriptionRef}  placeholder="Resuma de que trata su video"
                                                 onChange={(event)=>{
+                                                    const tempVideo = newVideo;
+                                                    tempVideo.description = event.target.value;
+                                                    setNewVideo(tempVideo);
                                                   }}
                                                 />
                                 <label class="label" >Categoría</label><br></br>
                                 <select class="entry" id="countryname"  ref={categoryRef}
-                                                        onChange={()=>{}}>
+                                                        onChange={()=>{
+                                                            const tempVideo = newVideo;
+                                                            tempVideo.category = categoryRef.current.value;
+                                                            setNewVideo(tempVideo);
+                                                        }}>
                                                         <option value="" disabled selected hidden>Elige una categoría</option>
                                                         {categoryoption}
                                 </select><br></br>
 
                                 <label class="label" >País</label><br></br>
                                 <select class="entry" id="countryname"  ref={countryRef}
-                                                        onChange={()=>{}}>
+                                                        onChange={()=>{
+                                                            const tempVideo = newVideo;
+                                                            tempVideo.country = countryRef.current.value;
+                                                            setNewVideo(tempVideo);
+                                                        }}>
                                                         <option value="" disabled selected hidden>Elige un país</option>
                                                         {countryoption}
                                 </select><br></br>
@@ -234,7 +241,11 @@ const Dashboard=({tryLogin}) =>{
                     <Button id="AddClose" variant="secondary" onClick={handleClose}>
                         Cerrar
                     </Button>
-                    <Button id="AddSave" variant="primary" onClick={handleClose}>
+                    <Button id="AddSave" variant="primary" 
+                        onClick={()=>{
+                            writeUserData(1, newVideo.title, newVideo.description, newVideo.category, 
+                                newVideo.country, newVideo.videoUrl)}
+                               }>
                         Salvar Cambios
                     </Button>
                     </Modal.Footer>

@@ -8,3 +8,11 @@
         
     
   }
+
+  #ButtonCardOnly{
+    background-color: #61dafb;
+    color:white;
+    font-weight: bold;
+    border: transparent;
+
+}
