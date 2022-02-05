@@ -5,9 +5,8 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'
 import AddVideo from '../components/AddVideo'
 import VideoBlog from "./Videoblog";
-import { getDatabase, ref, set, get,child } from "firebase/database";
 import { getStorage, uploadBytes } from "firebase/storage";
-import { ref as refStorage } from "firebase/storage";
+import { ref as refStorage, getDownloadURL } from "firebase/storage";
 import { doc, getFirestore, setDoc, addDoc,collection, getDocs } from "firebase/firestore";
 import "../styles/Dashboard.css"
 
@@ -48,7 +47,7 @@ const Dashboard=({tryLogin}) =>{
     const countryRef = useRef();
     const videoRef = useRef();
 
-    function changeVideo(video){
+    async function changeVideo(video, e){
        // Create a root reference
         const storage = getStorage();
 
@@ -62,11 +61,25 @@ const Dashboard=({tryLogin}) =>{
         //mountainsRef.name === mountainImagesRef.name;           // true
         //mountainsRef.fullPath === mountainImagesRef.fullPath;   // false 
 
-        const storageRef = refStorage(storage, ('videos/'+video.name));
-
+        //var reader = new FileReader();
+        //var fileByteArray = [];
+        //reader.readAsArrayBuffer(video);
+        //reader.onloadend = function (evt) {
+        //    if (evt.target.readyState == FileReader.DONE) {
+        //    var arrayBuffer = evt.target.result,
+        //        array = new Uint8Array(arrayBuffer);
+        //    for (var i = 0; i < array.length; i++) {
+        //        fileByteArray.push(array[i]);
+        //        }
+        //    }
+        //}
+        const storageRef = refStorage(storage, 'videos/'+video.name);
+        const y = await getDownloadURL(storageRef)
+        console.log(y)
+        
         // 'file' comes from the Blob or File API
         uploadBytes(storageRef, video).then((snapshot) => {
-  console.log('Uploaded a blob or file!');
+            
         });
       
         setVideoSelect(true)
@@ -203,7 +216,7 @@ const Dashboard=({tryLogin}) =>{
                                                                     <input name="video" id="video" class="entry" ref={videoRef} type="file" placeholder="&#xF0ee;Subir Imagen" 
                                                                         onChange={(e)=>{
                                                                             let video = e.target.files[0];
-                                                                            changeVideo(video);}} />
+                                                                            changeVideo(video, e);}} />
                                                                     &#xF0ee;Subir Video
                                                                 </label>
                                                             </div>
