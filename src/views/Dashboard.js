@@ -6,6 +6,9 @@ import Modal from 'react-bootstrap/Modal'
 import AddVideo from '../components/AddVideo'
 import VideoBlog from "./Videoblog";
 import { getDatabase, ref, set, get,child } from "firebase/database";
+import { getStorage, uploadBytes } from "firebase/storage";
+import { ref as refStorage } from "firebase/storage";
+import { doc, getFirestore, setDoc, addDoc,collection, getDocs } from "firebase/firestore";
 import "../styles/Dashboard.css"
 
 const Dashboard=({tryLogin}) =>{
@@ -27,6 +30,16 @@ const Dashboard=({tryLogin}) =>{
     const categorylist =  ['Ensaladas', 'Postres', 'Carnes', 'Frutas', 'Entrantes']
     const categorysort=categorylist.sort()
     const categoryoption = new Array(categorysort.map((option,key) =>  <option key={key} value={option}>{option}</option>))
+    
+    const initVideo={
+        title:'',
+        description:'',
+        category:'',
+        country:'',
+        videoUrl:''
+    }
+
+    const [newVideo,setNewVideo]=useState(initVideo)
 
     const titleRef = useRef();
     const descriptionRef = useRef();
@@ -35,6 +48,25 @@ const Dashboard=({tryLogin}) =>{
     const videoRef = useRef();
 
     function changeVideo(video){
+       // Create a root reference
+        const storage = getStorage();
+
+        // Create a reference to 'mountains.jpg'
+        //const mountainsRef = ref(storage, 'mountains.jpg');
+
+        // Create a reference to 'images/mountains.jpg'
+        //const mountainImagesRef = ref(storage, 'images/mountains.jpg');
+
+        // While the file names are the same, the references point to different files
+        //mountainsRef.name === mountainImagesRef.name;           // true
+        //mountainsRef.fullPath === mountainImagesRef.fullPath;   // false 
+
+        const storageRef = refStorage(storage, ('videos/'+video.name));
+
+        // 'file' comes from the Blob or File API
+        uploadBytes(storageRef, video).then((snapshot) => {
+  console.log('Uploaded a blob or file!');
+        });
       
         setVideoSelect(true)
         
@@ -43,35 +75,43 @@ const Dashboard=({tryLogin}) =>{
 
    
 
-    function writeUserData(id, title, description, category, country, videoUrl) {
-        const db = getDatabase();
-        set(ref(db, 'Videos/' + id), {
-            id : id, 
-            title: title, 
-            description: description, 
-            category: category, 
-            country: country,
-            videourl: videoUrl
-    });
-    }
+     async function writeUserData(id, title, description, category, country, videoUrl) {
+        const db = getFirestore();
+        //const reference = ref(db, 'Videos/' + id)
+        try {
+            const docRef = await addDoc(collection(db, "Videos"), {
+            Id : id, 
+            Title: title, 
+            Description: description, 
+            Category: category, 
+            Country: country,
+            Video: videoUrl
+        })
+    }catch (e) {
+        console.error("Error adding document: ", e);
+}}
+    
 
-    const dbRef = ref(getDatabase());
-    const userId=1;
-    function read(){
-        get(child(dbRef, `Videos/${userId}`)).then((snapshot) => {
-        if (snapshot.exists()) {
-            console.log(snapshot.val());
-        } else {
-            console.log("No data available");
-        }
-        }).catch((error) => {
-        console.error(error);
+   
+    async function read(){
+        const db = getFirestore();
+        const querySnapshot = await getDocs(collection(db, "Videos"));
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data());
         });
     }
 
     useEffect(() => {
-        writeUserData(1,"titulo","descripcion","categoria","cuba","");
+        writeUserData(2,"titulo3","descripcion3","categoria3","cuba3","");
         read();
+        
+        /*titleRef.current.value='';
+        descriptionRef.current.value ='';
+        categoryRef.current.value='';
+        countryRef.current.value='';
+        videoRef.current.value='';
+        setVideoSelect(false);*/
       
        
     }, []);
