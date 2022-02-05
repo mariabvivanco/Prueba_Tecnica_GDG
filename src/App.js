@@ -7,6 +7,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import VideoBlog from "../src/views/Videoblog"
 import NotfoundPage from "../src/views/NotFoundPage.jsx"
 import "../src/App.css"
+import VideoOnly from "./views/VideoOnly";
 export const appContext = React.createContext([]);
 
 
@@ -71,9 +72,8 @@ function App() {
                     {/* Redirections to protect our routes */}
                         <Route exact path='/'> <Redirect from='/' to='/dashboard' /> </Route>
                         <Route path='/dashboard' > <Dashboard tryLogin={tryLogin}/> </Route>
-                        <Route path='/videoblog/:idblog' ><VideoBlog/></Route>
-                
-                        <Route component={NotfoundPage}/>
+                        <Route path='/videoonly/:idvideo' ><VideoOnly></VideoOnly></Route>
+                         <Route component={NotfoundPage}/>
                 </Switch>
                 </Router>
             </div>

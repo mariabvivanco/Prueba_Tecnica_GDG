@@ -101,13 +101,14 @@ const Dashboard=({tryLogin}) =>{
         videosLoad.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
           console.log(doc.id, " => ", doc.data());
-          tempVideos.push(doc.data())
+          tempVideos.push(doc.id, doc.data())
         });
         setVideos(tempVideos);
+
     }
 
     useEffect(() => {
-       // writeUserData(2,"titulo3","descripcion3","categoria3","cuba3","");
+        //writeUserData(2,"titulo4","descripcion4","categoria4","cuba4","");
         read();
         
         /*titleRef.current.value='';

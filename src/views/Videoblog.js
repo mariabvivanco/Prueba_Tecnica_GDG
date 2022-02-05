@@ -1,14 +1,17 @@
-import React, { useEffect, useContext ,useState} from "react";
+import React, { useEffect, useContext ,useState } from "react";
+import {useHistory} from 'react-router-dom'
 import { Layout } from "antd";
 import { withRouter } from "react-router";
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button';
+import VideoOnly from "./VideoOnly";
 
 const VideoBlog=({videos}) =>{
     const { Content, Footer } = Layout;
     //const { usuario } = useContext(Auth);
     const [nombre, setnombre] = useState(null)
-
+    const history= useHistory()
+;
     return(
 
    
@@ -27,7 +30,11 @@ const VideoBlog=({videos}) =>{
                 <Card.Text>
                     {doc.Description}
                 </Card.Text>
-                <Button variant="primary">Go somewhere</Button>
+                <Button variant="primary" onClick={()=>{
+                    console.log(doc)
+                    history.push('/videoonly/'+doc)
+                    ///<VideoOnly video={doc}></VideoOnly>
+                }}>Ver Video</Button>
                  </Card.Body>
                 </Card>)
 
