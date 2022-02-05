@@ -1,0 +1,233 @@
+
+  .Container {
+    text-align: center;
+    background-color: #61dafb;
+    height: 100%;
+    width: 100%;
+    margin-top: 0;
+  }
+
+.Dashboard{
+    font-family: FontAwesome;
+    background: #F8F8F9;
+    border-radius: 16px;
+    margin: 2% ;
+    margin-top: 2%;;
+    border-color: transparent;
+    
+  }
+
+
+  .AddVideo{
+    font-family: FontAwesome;
+    border-radius: 16px;
+    border-color: transparent;
+
+  }
+
+  label{
+      font-weight: bold;
+      margin-left: 5%;
+
+  }
+
+  input{
+    background:#E6E6EA;;
+    background-position: 3px;
+    padding-left: 30px;
+    border-radius: 8px; 
+    border: transparent; 
+    width: 40%;
+    position: "absolute"
+
+}
+
+select{
+    background:#E6E6EA;;
+    background-position: 3px;
+    padding-left: 30px;
+    border-radius: 8px; 
+    border: transparent; 
+    width: 100%;
+    position: "absolute"
+
+}
+
+  #AddSave{
+    background-color: #61dafb;
+    color:white;
+    font-weight: bold;
+
+}
+
+#AddClose{
+    background-color:white;
+    color:#61dafb;
+    font-weight: bold;
+
+}
+
+input[type="file"] {
+    display: none;
+  }
+  
+  .custom-video-upload {
+    border: transparent;
+    background:  #A5A8B3;
+    color: white;
+    border-radius: 8px;
+    font-family: FontAwesome;
+    font-size: medium;
+    height: 40px;
+    align-items: left;
+    margin-top:5px;
+    font-weight: lighter;
+    text-align: center;
+    
+  }
+
+  iframe{
+      height: 100%;
+      width: 100%;
+  }
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+a#light{
+    color:gray;
+  }
+  
+  form select#select:disabled {
+      color: gray !important;
+    }
+    
+  form  select#select:first-child {
+      color: gray !important;
+    }
+    
+    form select#select:invalid option:not(:first-child) {
+      color: black;
+    }
+  
+  button#tag{
+      background: #E6E6EA;
+      border-radius: 20px;
+      border-color: transparent;
+  }
+  
+  
+  input#pdf{
+      font-family: FontAwesome;
+      background: #F8F8F9;
+      border-radius: 16px;
+      margin: 0px;
+      border-color: transparent;
+      width: 100%;
+  }
+  
+  div#info{
+    font-family: FontAwesome;
+    background: #F8F8F9;
+    border-radius: 16px;
+    margin: 0px;
+    border-color: transparent;
+    width: 100%;
+  }
+  
+  
+  
+  .custom-file-upload{
+    font-family: FontAwesome;
+    background: #F8F8F9;
+    border-radius: 16px;
+    margin: 0px;
+    border-color: transparent;
+    width: 100%;
+  }
+  
+  input{
+      background: #F8F8F9;
+      border-radius: 16px;
+      margin: 0px;
+      border-color: transparent;
+      width: 100%;
+  }
+  
+  
+  
+  a#bold{
+    color:black;
+    font-size: small;
+    font-weight: bold;
+    
+  }
+  
+  button#update{
+    font-size: medium;
+    height: 40px;
+    align-items: left;
+    margin-top:5px
+  }
+  
+  .row{
+    --bs-gutter-x:0;
+    --bs-gutter-y:0;
+    margin-left: 0;
+    padding-left: 0;
+  }
+  
+  .col{
+    --bs-gutter-x:0;
+    --bs-gutter-y:0;
+    margin-left: 0;
+    padding-left: 0;
+  }
+  
+  .col-6{
+    --bs-gutter-x:0;
+    --bs-gutter-y:0;
+    margin-left: 0;
+    padding-left: 0;
+  }
+  
+  a#light{
+    text-align: left;
+    margin-left: 0;
+    padding-left: 0;
+    color:gray;
+    font-size: small;
+    font-weight: lighter;
+    margin-top: 0;
+    padding-top: 0;
+  }
+  
+  
+  input[type="file"] {
+    display: none;
+  }
+  
+  .custom-file-upload {
+    border: transparent;
+    background:  #A5A8B3;
+    color: white;
+    border-radius: 8px;
+    font-family: FontAwesome;
+    font-size: medium;
+    height: 40px;
+    align-items: left;
+    margin-top:5px;
+    font-weight: lighter;
+    text-align: center;
+    
+  }
+  

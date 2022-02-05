@@ -6,7 +6,9 @@ import {app, provider} from "../src/config/firebaseConfig";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import VideoBlog from "../src/views/Videoblog"
 import NotfoundPage from "../src/views/NotFoundPage.jsx"
+import "../src/App.css"
 export const appContext = React.createContext([]);
+
 
 function App() {
 
@@ -38,12 +40,12 @@ function App() {
                 .then((result) => {
                     // This gives you a Google Access Token. You can use it to access the Google API.
                     const credential = GoogleAuthProvider.credentialFromResult(result);
-                    //const token = credential.accessToken;
+                    const token = credential.accessToken;
                     // The signed-in user info.
                     const result1=result;
                     const user = result.user;
-                    //console.log(user)
-                    //console.log(token)
+                    console.log(user)
+                    console.log(token)
                     //localStorage.setItem("login_data", JSON.stringify({user, token: token}));
                 })
                 .catch((error) => {
@@ -61,20 +63,20 @@ function App() {
                     });}
 
         return(
-            //<appContext.Provider value={state}>
+            <div className="App">
                 <Router>
                 
                 {/* Route Switch */}
-                <Switch>
-                {/* Redirections to protect our routes */}
-                    <Route exact path='/'> <Redirect from='/' to='/dashboard' /> </Route>
-                    <Route path='/dashboard' > <Dashboard tryLogin={tryLogin}/> </Route>
-                    <Route path='/videoblog/:idblog' ><VideoBlog/></Route>
-            
-                    <Route component={NotfoundPage}/>
+                    <Switch>
+                    {/* Redirections to protect our routes */}
+                        <Route exact path='/'> <Redirect from='/' to='/dashboard' /> </Route>
+                        <Route path='/dashboard' > <Dashboard tryLogin={tryLogin}/> </Route>
+                        <Route path='/videoblog/:idblog' ><VideoBlog/></Route>
+                
+                        <Route component={NotfoundPage}/>
                 </Switch>
-            </Router>
-      //</appContext.Provider>
+                </Router>
+            </div>
     
     )}
 
