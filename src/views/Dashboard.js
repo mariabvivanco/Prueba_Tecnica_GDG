@@ -40,6 +40,7 @@ const Dashboard=({tryLogin}) =>{
     }
 
     const [newVideo,setNewVideo]=useState(initVideo)
+    const [videos,setVideos]=useState([])
 
     const titleRef = useRef();
     const descriptionRef = useRef();
@@ -95,15 +96,18 @@ const Dashboard=({tryLogin}) =>{
    
     async function read(){
         const db = getFirestore();
-        const querySnapshot = await getDocs(collection(db, "Videos"));
-        querySnapshot.forEach((doc) => {
+        const videosLoad = await getDocs(collection(db, "Videos"));
+        const tempVideos = [];
+        videosLoad.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
           console.log(doc.id, " => ", doc.data());
+          tempVideos.push(doc.data())
         });
+        setVideos(tempVideos);
     }
 
     useEffect(() => {
-        writeUserData(2,"titulo3","descripcion3","categoria3","cuba3","");
+       // writeUserData(2,"titulo3","descripcion3","categoria3","cuba3","");
         read();
         
         /*titleRef.current.value='';
@@ -153,7 +157,7 @@ const Dashboard=({tryLogin}) =>{
 
                 </div>
                 <div class='row'>
-                    <VideoBlog></VideoBlog>
+                    <VideoBlog videos={videos}></VideoBlog>
                 </div>
                     <Modal className="AddVideo" show={show} onHide={handleClose}>
                         <Modal.Header  closeButton>
