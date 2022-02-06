@@ -1,19 +1,15 @@
 import React, { useEffect, useContext ,useState, useRef} from "react";
-import { Layout } from "antd";
-
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'
-
 import VideoBlog from "./Videoblog";
-//import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getStorage, uploadBytes } from "firebase/storage";
 import { ref as refStorage, getDownloadURL } from "firebase/storage";
-import { getFirestore, setDoc, addDoc,collection, getDocs } from "firebase/firestore";
+import { getFirestore, setDoc, addDoc,collection, getDocs, query, where } from "firebase/firestore";
 import "../styles/Dashboard.css"
 import {appContext} from "../App"
 import { FcGoogle } from "@react-icons/all-files/fc/FcGoogle";
 import { FcVideoFile } from "@react-icons/all-files/fc/FcVideoFile";
-import { getAuth, getRedirectResult, GoogleAuthProvider } from "firebase/auth"
+
 
 
 const Dashboard=({tryLogin}) =>{
@@ -29,6 +25,7 @@ const Dashboard=({tryLogin}) =>{
                                 initModal()};
 
     const {isLogged} = useContext(appContext);
+
     const {nameUser} = useContext(appContext);
 
     const countrylist =  ['Estados Unidos', 'Rusia', 'China', 'Alemania', 'Reino Unido', 'Francia','Canadá', 'Suiza', 
@@ -51,12 +48,13 @@ const Dashboard=({tryLogin}) =>{
 
     const [newVideo,setNewVideo]=useState(initVideo)
     const [videos,setVideos]=useState([])
-
     const titleRef = useRef();
     const descriptionRef = useRef();
     const categoryRef = useRef();
     const countryRef = useRef();
     const videoRef = useRef();
+    const findCountryRef = useRef();
+    const findCategoryRef = useRef();
 
     async function changeVideo(video, e){
        
@@ -116,17 +114,46 @@ const Dashboard=({tryLogin}) =>{
         setNewVideo(initVideo);
 
     }
+
+    async function findCountry(country) {
+        const db = getFirestore();
+        const q = query(collection(db, "Videos"), where("Country", "==", country));
+
+        const videosLoad = await getDocs(q);
+        const tempVideos = [];
+        videosLoad.forEach((doc) => {
+            const tempvideo = {};
+            tempvideo.data=doc.data();
+            tempvideo.id=doc.id;
+            tempVideos.push(tempvideo)
+        });
+        setVideos(tempVideos);
+        
+    }
+
+    async function findCategory(category) {
+        const db = getFirestore();
+        const q = query(collection(db, "Videos"), where("Category", "==", category));
+
+        const videosLoad = await getDocs(q);
+        const tempVideos = [];
+        videosLoad.forEach((doc) => {
+            const tempvideo = {};
+            tempvideo.data=doc.data();
+            tempvideo.id=doc.id;
+            tempVideos.push(tempvideo)
+        });
+        setVideos(tempVideos);
+        
+    }
     
 
     useEffect(() => {
         
         read();
-        //initModal();
-   
-        //setVideoSelect(false);
-              
+                      
        
-    }, [videos,videoSelect,loading]);
+    }, []);
 
     
         return (
@@ -142,29 +169,58 @@ const Dashboard=({tryLogin}) =>{
                         </div>
 
                     </div>
-                    <div class='col-3'>
+                    <div class='col-2'>
                         
                     </div>
                     <div class='col-2'>
                         {!isLogged ? 
-                            <button id="init" onClick={()=>tryLogin()}><FcGoogle></FcGoogle>  Inicia Sesión en Google</button>
-                            :<label id="initName" >{nameUser}</label>}
-                    </div>
-                    
-
-                </div>
-                <div class ='row'>
-                    <div class='col-4'>
-
-                    </div>
-                    <div class='col-7'>
-                        
+                            <button id="init" onClick={
+                                ()=>{tryLogin()
+                                    read()}}><FcGoogle></FcGoogle>  Inicia Sesión en Google</button>
+                            :<>
+                                <label id="initName" >{nameUser}</label>
+                                <button id="init" onClick={
+                                    ()=>{localStorage.setItem("login_data", '')
+                                    read()}}><FcGoogle></FcGoogle>  Cierre Sesión en Google</button>
+                            </>}
                     </div>
                     <div class='col-1'>
                     {isLogged&&<Button id="add" variant="primary" onClick={()=>{handleShow()
                     }}>+
                     </Button>}
                     </div>
+                    
+
+                </div>
+                <div class ='row'>
+                    <div class='col-auto'>
+                        <label classname="label" ></label><br></br>
+                                <select className="entry" id="findcountry"  ref={findCountryRef}
+                                        onChange={()=>{
+                                            findCountry(findCountryRef.current.value);
+                                                                
+                                        }}>
+                                        <option value="" disabled selected hidden>Busque recetas de un país</option>
+                                                            {countryoption}
+                                </select><br></br>
+
+                    </div>
+                    <div class='col-auto'>
+                        <label classname="label" ></label><br></br>
+                                <select className="entry" id="findcategory"  ref={findCategoryRef}
+                                        onChange={()=>{
+                                            findCategory(findCategoryRef.current.value);
+                                                            
+                                        }}>
+                                        <option value="" disabled selected hidden>Busque recetas de una categoría</option>
+                                {categoryoption}
+                                </select><br></br>
+
+                    </div>
+                    
+                        
+                
+                    
                     
 
                 </div>

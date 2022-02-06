@@ -2,20 +2,22 @@ Tarea Técnica GDG
 
 Tiempo de Realización: Dos días;
 
-Proyecto que crea un videoblog permitiendo subir  nuevos post y consultarlos con 
+Proyecto que crea un videoblog permitiendo subir  nuevos post y consultarlos los existentes 
 
 Realizado en React-js
 
 Para el back se utilizaron las funcionaliddaes de Firebase para almacenamiento de ficheros, base  de datos y autenticación con Google
 
-Para crar un nuevo post es necesario estar autenticados pero todas los usuarios pueden acceder a los post anteriores.
+Para crear un nuevo post es necesario estar autenticado pero todas los usuarios pueden acceder a los post anteriores.
 
-De haber contado con más tiempo hubiese podido elegir entre dos opciones:
+De haber contado con más tiempo hubiese podido: 
 
-1- Implementar un back para la aplicación con Spring con paginación a nivel de back, filtros avanzados.
+Refactorizar el proyecto para tener comonentes más pequeños y reutilizables.
+Implementar la funcionalidad de comentarios y comentarios anidados
+Establecer un sistema de votaciones a los post y filtrar los más o menos valorados
+Establecer filtros avanzados 
+Implementar la paginación.
 
-2- Invertir más  recursos económicos y utilizar las funcionalidades pagas de Firebase como mayor cantidad de almacenamiento
-
-
-
+Nota: Se proporciona el fichero de configuración de Firebase para que pueda ser probado el código pero será eliminado en unos días.
+      Por problemas de implementar el proyecto en el plan gratis de Firebase en ocasiones da error de cuota excedida ya sea por peticiones o por tamaño.
 
