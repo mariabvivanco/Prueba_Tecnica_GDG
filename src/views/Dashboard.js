@@ -1,30 +1,31 @@
 import React, { useEffect, useContext ,useState, useRef} from "react";
-import { Layout } from "antd";
-
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'
-
 import VideoBlog from "./Videoblog";
 import { getStorage, uploadBytes } from "firebase/storage";
 import { ref as refStorage, getDownloadURL } from "firebase/storage";
-import { getFirestore, setDoc, addDoc,collection, getDocs } from "firebase/firestore";
+import { getFirestore, setDoc, addDoc,collection, getDocs, query, where } from "firebase/firestore";
 import "../styles/Dashboard.css"
 import {appContext} from "../App"
 import { FcGoogle } from "@react-icons/all-files/fc/FcGoogle";
 import { FcVideoFile } from "@react-icons/all-files/fc/FcVideoFile";
 
 
+
 const Dashboard=({tryLogin}) =>{
-    const { Content, Footer } = Layout;
+    //const { Content, Footer } = Layout;
     //const { usuario } = useContext(Auth);
-    const [nombre, setnombre] = useState(null)
+    //const [nombre, setnombre] = useState(null)
     const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [videoSelect, setVideoSelect] = useState(false);
 
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleShow = () => {setShow(true)
+                                initModal()};
 
     const {isLogged} = useContext(appContext);
+
     const {nameUser} = useContext(appContext);
 
     const countrylist =  ['Estados Unidos', 'Rusia', 'China', 'Alemania', 'Reino Unido', 'Francia','Canadá', 'Suiza', 
@@ -47,30 +48,26 @@ const Dashboard=({tryLogin}) =>{
 
     const [newVideo,setNewVideo]=useState(initVideo)
     const [videos,setVideos]=useState([])
-
     const titleRef = useRef();
     const descriptionRef = useRef();
     const categoryRef = useRef();
     const countryRef = useRef();
     const videoRef = useRef();
+    const findCountryRef = useRef();
+    const findCategoryRef = useRef();
 
     async function changeVideo(video, e){
        
         const storage = getStorage();
-
         const storageRef = refStorage(storage, 'videos/'+video.name);
-        
-        
-        // 'file' comes from the Blob or File API
-        const response = await uploadBytes(storageRef, video)//.then((snapshot) => {});
+        const response = await uploadBytes(storageRef, video);
         const url = await getDownloadURL(storageRef);
         console.log(url)
         const tempVideo = newVideo;
         tempVideo.videoUrl = url;
         setNewVideo(tempVideo);
-      
-        setVideoSelect(true)
-        
+        setVideoSelect(true);
+        setLoading(false);
                 
         }
 
@@ -78,7 +75,6 @@ const Dashboard=({tryLogin}) =>{
 
      async function writeUserData(id, title, description, category, country, videoUrl) {
         const db = getFirestore();
-        //const reference = ref(db, 'Videos/' + id)
         try {
             const docRef = await addDoc(collection(db, "Videos"), {
             Id : id, 
@@ -99,28 +95,63 @@ const Dashboard=({tryLogin}) =>{
         const videosLoad = await getDocs(collection(db, "Videos"));
         const tempVideos = [];
         videosLoad.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-         // console.log(doc.id, " => ", doc.data());
-          const tempvideo = {};
-          tempvideo.data=doc.data();
-          tempvideo.id=doc.id;
-          tempVideos.push(tempvideo)
+            const tempvideo = {};
+            tempvideo.data=doc.data();
+            tempvideo.id=doc.id;
+            tempVideos.push(tempvideo)
         });
         setVideos(tempVideos);
 
     }
 
-    useEffect(() => {
-        //writeUserData(2,"titulo4","descripcion4","categoria4","cuba4","");
-        read();
+    function initModal() {
         
-        /*titleRef.current.value='';
+        titleRef.current.value="";
         descriptionRef.current.value ='';
         categoryRef.current.value='';
         countryRef.current.value='';
         videoRef.current.value='';
-        setVideoSelect(false);*/
-      
+        setNewVideo(initVideo);
+
+    }
+
+    async function findCountry(country) {
+        const db = getFirestore();
+        const q = query(collection(db, "Videos"), where("Country", "==", country));
+
+        const videosLoad = await getDocs(q);
+        const tempVideos = [];
+        videosLoad.forEach((doc) => {
+            const tempvideo = {};
+            tempvideo.data=doc.data();
+            tempvideo.id=doc.id;
+            tempVideos.push(tempvideo)
+        });
+        setVideos(tempVideos);
+        
+    }
+
+    async function findCategory(category) {
+        const db = getFirestore();
+        const q = query(collection(db, "Videos"), where("Category", "==", category));
+
+        const videosLoad = await getDocs(q);
+        const tempVideos = [];
+        videosLoad.forEach((doc) => {
+            const tempvideo = {};
+            tempvideo.data=doc.data();
+            tempvideo.id=doc.id;
+            tempVideos.push(tempvideo)
+        });
+        setVideos(tempVideos);
+        
+    }
+    
+
+    useEffect(() => {
+        
+        read();
+                      
        
     }, []);
 
@@ -138,31 +169,58 @@ const Dashboard=({tryLogin}) =>{
                         </div>
 
                     </div>
-                    <div class='col-3'>
+                    <div class='col-2'>
                         
                     </div>
                     <div class='col-2'>
-                        {isLogged ? 
-                            <button id="init" onClick={()=>tryLogin()}><FcGoogle></FcGoogle>  Inicia Sesión en Google</button>
-                            :<label id="initname" >{nameUser}</label>}
+                        {!isLogged ? 
+                            <button id="init" onClick={
+                                ()=>{tryLogin()
+                                    read()}}><FcGoogle></FcGoogle>  Inicia Sesión en Google</button>
+                            :<>
+                                <label id="initName" >{nameUser}</label>
+                                <button id="init" onClick={
+                                    ()=>{localStorage.setItem("login_data", '')
+                                    read()}}><FcGoogle></FcGoogle>  Cierre Sesión en Google</button>
+                            </>}
+                    </div>
+                    <div class='col-1'>
+                    {isLogged&&<Button id="add" variant="primary" onClick={()=>{handleShow()
+                    }}>+
+                    </Button>}
                     </div>
                     
 
                 </div>
                 <div class ='row'>
-                    <div class='col-4'>
+                    <div class='col-auto'>
+                        <label classname="label" ></label><br></br>
+                                <select className="entry" id="findcountry"  ref={findCountryRef}
+                                        onChange={()=>{
+                                            findCountry(findCountryRef.current.value);
+                                                                
+                                        }}>
+                                        <option value="" disabled selected hidden>Busque recetas de un país</option>
+                                                            {countryoption}
+                                </select><br></br>
 
                     </div>
-                    <div class='col-7'>
-                        
+                    <div class='col-auto'>
+                        <label classname="label" ></label><br></br>
+                                <select className="entry" id="findcategory"  ref={findCategoryRef}
+                                        onChange={()=>{
+                                            findCategory(findCategoryRef.current.value);
+                                                            
+                                        }}>
+                                        <option value="" disabled selected hidden>Busque recetas de una categoría</option>
+                                {categoryoption}
+                                </select><br></br>
+
                     </div>
-                    <div class='col-1'>
-                    <Button id="add" variant="primary" onClick={()=>{handleShow()
-                    }}>
                     
-                        +
-                    </Button>
-                    </div>
+                        
+                
+                    
                     
 
                 </div>
@@ -176,7 +234,7 @@ const Dashboard=({tryLogin}) =>{
                     <Modal.Body>
                         <div class="row">
                             <div class='col-6'>
-                                <label class="label" >Título</label>
+                                <label className="label" >Título</label>
                                                 <input name="title" id="entry" type="text" ref={titleRef}  placeholder="Ej: Receta de Cerdo Asado"
                                                 onChange={(event)=>{
                                                     const tempVideo = newVideo;
@@ -184,7 +242,7 @@ const Dashboard=({tryLogin}) =>{
                                                     setNewVideo(tempVideo);
                                                   }}
                                                 />
-                                 <label class="label" >Descripción</label>
+                                 <label className="label" >Descripción</label>
                                                 <input name="title" id="entry" type="text" ref={descriptionRef}  placeholder="Resuma de que trata su video"
                                                 onChange={(event)=>{
                                                     const tempVideo = newVideo;
@@ -192,8 +250,8 @@ const Dashboard=({tryLogin}) =>{
                                                     setNewVideo(tempVideo);
                                                   }}
                                                 />
-                                <label class="label" >Categoría</label><br></br>
-                                <select class="entry" id="countryname"  ref={categoryRef}
+                                <label className="label" >Categoría</label><br></br>
+                                <select className="entry" id="countryname"  ref={categoryRef}
                                                         onChange={()=>{
                                                             const tempVideo = newVideo;
                                                             tempVideo.category = categoryRef.current.value;
@@ -203,8 +261,8 @@ const Dashboard=({tryLogin}) =>{
                                                         {categoryoption}
                                 </select><br></br>
 
-                                <label class="label" >País</label><br></br>
-                                <select class="entry" id="countryname"  ref={countryRef}
+                                <label classname="label" >País</label><br></br>
+                                <select className="entry" id="countryname"  ref={countryRef}
                                                         onChange={()=>{
                                                             const tempVideo = newVideo;
                                                             tempVideo.country = countryRef.current.value;
@@ -226,13 +284,16 @@ const Dashboard=({tryLogin}) =>{
                                                                     <input name="video" id="buttonvideo" class="entry" ref={videoRef} type="file" 
                                                                         onChange={(e)=>{
                                                                             let video = e.target.files[0];
-                                                                            changeVideo(video, e);}} />
+                                                                            setLoading(true);
+                                                                            changeVideo(video, e);
+                                                                            setVideoSelect(true)}} />
                                                                     <FcVideoFile></FcVideoFile>   Subir Video
                                                                 </label>
+                                                            {loading&&<label>Cargando Video</label>}
                                                             </div>
                                                             
-                                                        </div>
-                                                    :<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>}
+                                                    </div>
+                                                    :<iframe class="embed-responsive-item" src={newVideo.videoUrl} allowfullscreen></iframe>}
                                             </div>}
 
                             </div>
