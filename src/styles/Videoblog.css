@@ -1,0 +1,12 @@
+#VideoBlog{
+    margin-top: 3%;
+    margin-left: 3%;
+    align-items: center;       
+}
+
+#ButtonCard{
+    background-color: #61dafb;
+    color:white;
+    font-weight: bold;
+    border: transparent;
+}
