@@ -13,9 +13,7 @@ import { FcVideoFile } from "@react-icons/all-files/fc/FcVideoFile";
 
 
 const Dashboard=({tryLogin}) =>{
-    //const { Content, Footer } = Layout;
-    //const { usuario } = useContext(Auth);
-    //const [nombre, setnombre] = useState(null)
+    
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
     const [videoSelect, setVideoSelect] = useState(false);
@@ -236,23 +234,23 @@ const Dashboard=({tryLogin}) =>{
                     <Modal.Body>
                         <div class="row">
                             <div class='col-6'>
-                                <label className="label" >Título</label>
-                                                <input name="title" id="entry" type="text" ref={titleRef}  placeholder="Ej: Receta de Cerdo Asado"
+                                <label className="label" id="label" >Título</label><br></br>
+                                                <input name="title" id="entry1" type="text" ref={titleRef}  placeholder="Ej: Receta de Cerdo Asado"
                                                 onChange={(event)=>{
                                                     const tempVideo = newVideo;
                                                     tempVideo.title = event.target.value;
                                                     setNewVideo(tempVideo);
                                                   }}
-                                                />
-                                 <label className="label" >Descripción</label>
-                                                <input name="title" id="entry" type="text" ref={descriptionRef}  placeholder="Resuma de que trata su video"
+                                                /><br></br>
+                                 <label className="label" id="label" >Descripción</label><br></br>
+                                                <input name="title" id="entry2" type="text" ref={descriptionRef}  placeholder="Resuma de que trata su video"
                                                 onChange={(event)=>{
                                                     const tempVideo = newVideo;
                                                     tempVideo.description = event.target.value;
                                                     setNewVideo(tempVideo);
                                                   }}
-                                                />
-                                <label className="label" >Categoría</label><br></br>
+                                                /><br></br>
+                                <label className="label" id="label" >Categoría</label><br></br>
                                 <select className="entry" id="countryname"  ref={categoryRef}
                                                         onChange={()=>{
                                                             const tempVideo = newVideo;
@@ -263,7 +261,7 @@ const Dashboard=({tryLogin}) =>{
                                                         {categoryoption}
                                 </select><br></br>
 
-                                <label classname="label" >País</label><br></br>
+                                <label classname="label" id="label" >País</label><br></br>
                                 <select className="entry" id="countryname"  ref={countryRef}
                                                         onChange={()=>{
                                                             const tempVideo = newVideo;
@@ -277,7 +275,7 @@ const Dashboard=({tryLogin}) =>{
 
                             </div>
                             <div class='col-6'>
-                            <label>Video</label>
+                            <label id="label">Video</label>
                                             {<div>
                                                 {!videoSelect ? 
                                                     <div class='row'>

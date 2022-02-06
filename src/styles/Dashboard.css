@@ -67,20 +67,31 @@ span#student{
 
   }
 
-  label{
+  #label{
       font-weight: bold;
       margin-left: 5%;
+      margin-top: 5%;
 
   }
 
-  input{
+  #entry1{
     background:white;
     background-position: 3px;
     padding-left: 30px;
     border-radius: 8px; 
     border: transparent; 
-    width: 40%;
+    width: 100%;
     position: "absolute"
+
+}
+#entry2{
+  background:white;
+  background-position: 3px;
+  padding-left: 30px;
+  border-radius: 8px; 
+  border: transparent; 
+  width: 100%;
+  position: "absolute"
 
 }
 
