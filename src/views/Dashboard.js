@@ -19,12 +19,14 @@ const Dashboard=({tryLogin}) =>{
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
     const [videoSelect, setVideoSelect] = useState(false);
+    
 
     const handleClose = () => setShow(false);
     const handleShow = () => {setShow(true)
                                 initModal()};
 
     const {isLogged} = useContext(appContext);
+    const [loggin, setLoggin] = useState(isLogged);
 
     const {nameUser} = useContext(appContext);
 
@@ -153,7 +155,7 @@ const Dashboard=({tryLogin}) =>{
         read();
                       
        
-    }, []);
+    }, [videos]);
 
     
         return (
@@ -173,19 +175,19 @@ const Dashboard=({tryLogin}) =>{
                         
                     </div>
                     <div class='col-2'>
-                        {!isLogged ? 
-                            <button id="init" onClick={
+                        {!loggin ? 
+                            !loggin&&<button id="init" onClick={
                                 ()=>{tryLogin()
-                                    read()}}><FcGoogle></FcGoogle>  Inicia Sesión en Google</button>
-                            :<>
+                                    setLoggin(true)}}><FcGoogle></FcGoogle>  Inicia Sesión en Google</button>
+                            :loggin&&<>
                                 <label id="initName" >{nameUser}</label>
                                 <button id="init" onClick={
                                     ()=>{localStorage.setItem("login_data", '')
-                                    read()}}><FcGoogle></FcGoogle>  Cierre Sesión en Google</button>
+                                    setLoggin(false)}}><FcGoogle></FcGoogle>Cierre Sesión en Google</button>
                             </>}
                     </div>
                     <div class='col-1'>
-                    {isLogged&&<Button id="add" variant="primary" onClick={()=>{handleShow()
+                    {loggin&&<Button id="add" variant="primary" onClick={()=>{handleShow()
                     }}>+
                     </Button>}
                     </div>
