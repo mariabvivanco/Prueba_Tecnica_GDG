@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'
 
 import VideoBlog from "./Videoblog";
+//import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getStorage, uploadBytes } from "firebase/storage";
 import { ref as refStorage, getDownloadURL } from "firebase/storage";
 import { getFirestore, setDoc, addDoc,collection, getDocs } from "firebase/firestore";
@@ -12,6 +13,7 @@ import "../styles/Dashboard.css"
 import {appContext} from "../App"
 import { FcGoogle } from "@react-icons/all-files/fc/FcGoogle";
 import { FcVideoFile } from "@react-icons/all-files/fc/FcVideoFile";
+import { getAuth, getRedirectResult, GoogleAuthProvider } from "firebase/auth"
 
 
 const Dashboard=({tryLogin}) =>{
@@ -109,10 +111,24 @@ const Dashboard=({tryLogin}) =>{
         setVideos(tempVideos);
 
     }
+    
 
     useEffect(() => {
         //writeUserData(2,"titulo4","descripcion4","categoria4","cuba4","");
         read();
+
+       // const auth = getAuth();
+    //onAuthStateChanged(auth, (user) => {
+   // if (user) {
+    // User is signed in, see docs for a list of available properties
+    // https://firebase.google.com/docs/reference/js/firebase.User
+    //const uid = user.uid;
+    // ...
+  //} else {
+    // User is signed out
+    // ...
+  //}
+//});
         
         /*titleRef.current.value='';
         descriptionRef.current.value ='';
@@ -120,6 +136,26 @@ const Dashboard=({tryLogin}) =>{
         countryRef.current.value='';
         videoRef.current.value='';
         setVideoSelect(false);*/
+        const auth = getAuth();
+        getRedirectResult(auth)
+  .then((result) => {
+    // This gives you a Google Access Token. You can use it to access Google APIs.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+
+    // The signed-in user info.
+    const user = result.user;
+  }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    // ...
+  });
+
       
        
     }, []);
@@ -142,7 +178,7 @@ const Dashboard=({tryLogin}) =>{
                         
                     </div>
                     <div class='col-2'>
-                        {isLogged ? 
+                        {!isLogged ? 
                             <button id="init" onClick={()=>tryLogin()}><FcGoogle></FcGoogle>  Inicia Sesión en Google</button>
                             :<label id="initname" >{nameUser}</label>}
                     </div>
@@ -176,7 +212,7 @@ const Dashboard=({tryLogin}) =>{
                     <Modal.Body>
                         <div class="row">
                             <div class='col-6'>
-                                <label class="label" >Título</label>
+                                <label className="label" >Título</label>
                                                 <input name="title" id="entry" type="text" ref={titleRef}  placeholder="Ej: Receta de Cerdo Asado"
                                                 onChange={(event)=>{
                                                     const tempVideo = newVideo;
@@ -184,7 +220,7 @@ const Dashboard=({tryLogin}) =>{
                                                     setNewVideo(tempVideo);
                                                   }}
                                                 />
-                                 <label class="label" >Descripción</label>
+                                 <label className="label" >Descripción</label>
                                                 <input name="title" id="entry" type="text" ref={descriptionRef}  placeholder="Resuma de que trata su video"
                                                 onChange={(event)=>{
                                                     const tempVideo = newVideo;
@@ -192,8 +228,8 @@ const Dashboard=({tryLogin}) =>{
                                                     setNewVideo(tempVideo);
                                                   }}
                                                 />
-                                <label class="label" >Categoría</label><br></br>
-                                <select class="entry" id="countryname"  ref={categoryRef}
+                                <label className="label" >Categoría</label><br></br>
+                                <select className="entry" id="countryname"  ref={categoryRef}
                                                         onChange={()=>{
                                                             const tempVideo = newVideo;
                                                             tempVideo.category = categoryRef.current.value;
@@ -203,8 +239,8 @@ const Dashboard=({tryLogin}) =>{
                                                         {categoryoption}
                                 </select><br></br>
 
-                                <label class="label" >País</label><br></br>
-                                <select class="entry" id="countryname"  ref={countryRef}
+                                <label classname="label" >País</label><br></br>
+                                <select className="entry" id="countryname"  ref={countryRef}
                                                         onChange={()=>{
                                                             const tempVideo = newVideo;
                                                             tempVideo.country = countryRef.current.value;

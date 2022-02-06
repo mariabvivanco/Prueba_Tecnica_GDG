@@ -15,8 +15,8 @@ const VideoBlog=({videos}) =>{
             {existVideo && videos.map((video) => {
                  
                 return (
-                    <Card id="VideoBlog" style={{ width: '18rem' }}>
-                        <iframe class="embed-responsive-item" src={video.data.Video} allowfullscreen></iframe>
+                    <Card className="VideoBlog" style={{ width: '18rem' }}>
+                        <iframe class="embed-responsive-item" src={video.data.Video} allowFullScreen></iframe>
                         <Card.Body>
                             <Card.Title>{video.data.Title}</Card.Title>
                             <Card.Text>
