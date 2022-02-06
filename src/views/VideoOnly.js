@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import Card from 'react-bootstrap/Card'
-import Button from 'react-bootstrap/Button';
 import { useHistory, useParams } from 'react-router-dom';
 import { doc, getDoc, getFirestore } from "firebase/firestore";
+import Card from 'react-bootstrap/Card'
+import Button from 'react-bootstrap/Button';
 import  '../styles/Videoonly.css'
 
 
@@ -16,20 +16,15 @@ const VideoOnly = () => {
 
 async function uploadVideo(idvideo){
     const db = getFirestore();
+    const docRef = doc(db, "Videos", idvideo);
+    const docSnap = await getDoc(docRef);
 
-        const docRef = doc(db, "Videos", idvideo);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
+    if (docSnap.exists()) {
         setVideo(docSnap.data());
         setExistVideo(true);
-        } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-        }
-
     }
+
+}
 
     useEffect(() => {
         uploadVideo(idvideo)
@@ -38,22 +33,22 @@ async function uploadVideo(idvideo){
 
     return (
         existVideo&&<div>
-            <div>
-                           
-                
-                <Card  >
+            <Card  >
                 <iframe className="embed-responsive-item VideoOnly" src={video.Video} allowfullscreen></iframe>
                 <Card.Body>
-                <Card.Title>{video.Title}</Card.Title>
-                <Card.Text>
-                    {video.Description}
-                </Card.Text>
-                <Button id="ButtonCardOnly" variant="primary" onClick={()=>{history.push('/dashboard')}}>Cerrar</Button>
+                    <Card.Title>{video.Title}</Card.Title>
+                    <Card.Text>
+                        {video.Description}
+                    </Card.Text>
+                    <Button id="ButtonCardOnly" variant="primary" 
+                        onClick={()=>{
+                            history.push('/dashboard')}}>
+                        Cerrar
+                    </Button>
                  </Card.Body>
-                </Card>
-                </div>
-            
+            </Card>
         </div>
+       
     )}
 
 

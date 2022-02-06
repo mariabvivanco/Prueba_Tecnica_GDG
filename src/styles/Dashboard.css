@@ -50,10 +50,12 @@ span#student{
 }
 
 
-  .AddVideo{
+  #AddVideo{
     font-family: FontAwesome;
     border-radius: 16px;
     border-color: transparent;
+    margin-top: 10%;
+    
 
   }
 
@@ -64,7 +66,7 @@ span#student{
   }
 
   input{
-    background:#E6E6EA;;
+    background:white;
     background-position: 3px;
     padding-left: 30px;
     border-radius: 8px; 
@@ -75,7 +77,7 @@ span#student{
 }
 
 select{
-    background:#E6E6EA;;
+    background:#E6E6EA;
     background-position: 3px;
     padding-left: 30px;
     border-radius: 8px; 
@@ -96,6 +98,14 @@ select{
     background-color:white;
     color:#61dafb;
     font-weight: bold;
+
+}
+
+#buttonvideo{
+  background-color:white;
+  color:#61dafb;
+  font-weight: bold;
+  width: 100%;
 
 }
 

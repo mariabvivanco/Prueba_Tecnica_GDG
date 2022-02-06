@@ -1,16 +1,18 @@
 import React, { useEffect, useContext ,useState, useRef} from "react";
 import { Layout } from "antd";
-import { withRouter } from "react-router";
+
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'
-import AddVideo from '../components/AddVideo'
+
 import VideoBlog from "./Videoblog";
 import { getStorage, uploadBytes } from "firebase/storage";
 import { ref as refStorage, getDownloadURL } from "firebase/storage";
-import { doc, getFirestore, setDoc, addDoc,collection, getDocs } from "firebase/firestore";
+import { getFirestore, setDoc, addDoc,collection, getDocs } from "firebase/firestore";
 import "../styles/Dashboard.css"
 import {appContext} from "../App"
 import { FcGoogle } from "@react-icons/all-files/fc/FcGoogle";
+import { FcVideoFile } from "@react-icons/all-files/fc/FcVideoFile";
+
 
 const Dashboard=({tryLogin}) =>{
     const { Content, Footer } = Layout;
@@ -60,9 +62,7 @@ const Dashboard=({tryLogin}) =>{
         
         
         // 'file' comes from the Blob or File API
-        uploadBytes(storageRef, video).then((snapshot) => {
-            
-        });
+        const response = await uploadBytes(storageRef, video)//.then((snapshot) => {});
         const url = await getDownloadURL(storageRef);
         console.log(url)
         const tempVideo = newVideo;
@@ -100,8 +100,11 @@ const Dashboard=({tryLogin}) =>{
         const tempVideos = [];
         videosLoad.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data());
-          tempVideos.push(doc.id, doc.data())
+         // console.log(doc.id, " => ", doc.data());
+          const tempvideo = {};
+          tempvideo.data=doc.data();
+          tempvideo.id=doc.id;
+          tempVideos.push(tempvideo)
         });
         setVideos(tempVideos);
 
@@ -139,7 +142,7 @@ const Dashboard=({tryLogin}) =>{
                         
                     </div>
                     <div class='col-2'>
-                        {!isLogged ? 
+                        {isLogged ? 
                             <button id="init" onClick={()=>tryLogin()}><FcGoogle></FcGoogle>  Inicia Sesión en Google</button>
                             :<label id="initname" >{nameUser}</label>}
                     </div>
@@ -166,7 +169,7 @@ const Dashboard=({tryLogin}) =>{
                 <div class='row'>
                     <VideoBlog videos={videos}></VideoBlog>
                 </div>
-                    <Modal className="AddVideo" show={show} onHide={handleClose}>
+                    <Modal id="AddVideo" show={show} onHide={handleClose}>
                         <Modal.Header  closeButton>
                             <Modal.Title>Añade tu video</Modal.Title>
                         </Modal.Header>
@@ -219,12 +222,12 @@ const Dashboard=({tryLogin}) =>{
                                                 {!videoSelect ? 
                                                     <div class='row'>
                                                             <div class="col-auto" >
-                                                                <label class="custom-video-upload">
-                                                                    <input name="video" id="video" class="entry" ref={videoRef} type="file" placeholder="&#xF0ee;Subir Imagen" 
+                                                                <label class="custom-video-upload" id="buttonvideo">
+                                                                    <input name="video" id="buttonvideo" class="entry" ref={videoRef} type="file" 
                                                                         onChange={(e)=>{
                                                                             let video = e.target.files[0];
                                                                             changeVideo(video, e);}} />
-                                                                    &#xF0ee;Subir Video
+                                                                    <FcVideoFile></FcVideoFile>   Subir Video
                                                                 </label>
                                                             </div>
                                                             

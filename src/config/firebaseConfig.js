@@ -27,6 +27,6 @@ const analytics = getAnalytics(app);
 //const googleAuthProvider = new firebase.auth().GoogleAuthProvider()
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
-const db = getFirestore();
+//const db = getFirestore();
 
 export {app,auth,provider,analytics}//, googleAuthProvider, analytics, auth}
