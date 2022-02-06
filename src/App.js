@@ -4,7 +4,6 @@ import Dashboard from "../src/views/Dashboard";
 import { initializeApp } from "firebase/app";
 import {app, provider} from "../src/config/firebaseConfig";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-//import VideoBlog from "../src/views/Videoblog"
 import NotfoundPage from "../src/views/NotFoundPage.jsx"
 import "../src/App.css"
 import VideoOnly from "./views/VideoOnly";
