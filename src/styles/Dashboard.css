@@ -40,6 +40,13 @@ span#student{
 
 }
 
+#initName{
+  margin-top: 10%;
+  border: transparent;
+  border-radius: 16px;
+
+}
+
 #add{
     background-color: #61dafb;
     color:white;

@@ -17,14 +17,16 @@ import { getAuth, getRedirectResult, GoogleAuthProvider } from "firebase/auth"
 
 
 const Dashboard=({tryLogin}) =>{
-    const { Content, Footer } = Layout;
+    //const { Content, Footer } = Layout;
     //const { usuario } = useContext(Auth);
-    const [nombre, setnombre] = useState(null)
+    //const [nombre, setnombre] = useState(null)
     const [show, setShow] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [videoSelect, setVideoSelect] = useState(false);
 
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleShow = () => {setShow(true)
+                                initModal()};
 
     const {isLogged} = useContext(appContext);
     const {nameUser} = useContext(appContext);
@@ -59,20 +61,15 @@ const Dashboard=({tryLogin}) =>{
     async function changeVideo(video, e){
        
         const storage = getStorage();
-
         const storageRef = refStorage(storage, 'videos/'+video.name);
-        
-        
-        // 'file' comes from the Blob or File API
-        const response = await uploadBytes(storageRef, video)//.then((snapshot) => {});
+        const response = await uploadBytes(storageRef, video);
         const url = await getDownloadURL(storageRef);
         console.log(url)
         const tempVideo = newVideo;
         tempVideo.videoUrl = url;
         setNewVideo(tempVideo);
-      
-        setVideoSelect(true)
-        
+        setVideoSelect(true);
+        setLoading(false);
                 
         }
 
@@ -80,7 +77,6 @@ const Dashboard=({tryLogin}) =>{
 
      async function writeUserData(id, title, description, category, country, videoUrl) {
         const db = getFirestore();
-        //const reference = ref(db, 'Videos/' + id)
         try {
             const docRef = await addDoc(collection(db, "Videos"), {
             Id : id, 
@@ -101,64 +97,36 @@ const Dashboard=({tryLogin}) =>{
         const videosLoad = await getDocs(collection(db, "Videos"));
         const tempVideos = [];
         videosLoad.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-         // console.log(doc.id, " => ", doc.data());
-          const tempvideo = {};
-          tempvideo.data=doc.data();
-          tempvideo.id=doc.id;
-          tempVideos.push(tempvideo)
+            const tempvideo = {};
+            tempvideo.data=doc.data();
+            tempvideo.id=doc.id;
+            tempVideos.push(tempvideo)
         });
         setVideos(tempVideos);
+
+    }
+
+    function initModal() {
+        
+        titleRef.current.value="";
+        descriptionRef.current.value ='';
+        categoryRef.current.value='';
+        countryRef.current.value='';
+        videoRef.current.value='';
+        setNewVideo(initVideo);
 
     }
     
 
     useEffect(() => {
-        //writeUserData(2,"titulo4","descripcion4","categoria4","cuba4","");
-        read();
-
-       // const auth = getAuth();
-    //onAuthStateChanged(auth, (user) => {
-   // if (user) {
-    // User is signed in, see docs for a list of available properties
-    // https://firebase.google.com/docs/reference/js/firebase.User
-    //const uid = user.uid;
-    // ...
-  //} else {
-    // User is signed out
-    // ...
-  //}
-//});
         
-        /*titleRef.current.value='';
-        descriptionRef.current.value ='';
-        categoryRef.current.value='';
-        countryRef.current.value='';
-        videoRef.current.value='';
-        setVideoSelect(false);*/
-        const auth = getAuth();
-        getRedirectResult(auth)
-  .then((result) => {
-    // This gives you a Google Access Token. You can use it to access Google APIs.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential.accessToken;
-
-    // The signed-in user info.
-    const user = result.user;
-  }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-  });
-
-      
+        read();
+        //initModal();
+   
+        //setVideoSelect(false);
+              
        
-    }, []);
+    }, [videos,videoSelect,loading]);
 
     
         return (
@@ -180,7 +148,7 @@ const Dashboard=({tryLogin}) =>{
                     <div class='col-2'>
                         {!isLogged ? 
                             <button id="init" onClick={()=>tryLogin()}><FcGoogle></FcGoogle>  Inicia Sesión en Google</button>
-                            :<label id="initname" >{nameUser}</label>}
+                            :<label id="initName" >{nameUser}</label>}
                     </div>
                     
 
@@ -193,11 +161,9 @@ const Dashboard=({tryLogin}) =>{
                         
                     </div>
                     <div class='col-1'>
-                    <Button id="add" variant="primary" onClick={()=>{handleShow()
-                    }}>
-                    
-                        +
-                    </Button>
+                    {isLogged&&<Button id="add" variant="primary" onClick={()=>{handleShow()
+                    }}>+
+                    </Button>}
                     </div>
                     
 
@@ -262,13 +228,16 @@ const Dashboard=({tryLogin}) =>{
                                                                     <input name="video" id="buttonvideo" class="entry" ref={videoRef} type="file" 
                                                                         onChange={(e)=>{
                                                                             let video = e.target.files[0];
-                                                                            changeVideo(video, e);}} />
+                                                                            setLoading(true);
+                                                                            changeVideo(video, e);
+                                                                            setVideoSelect(true)}} />
                                                                     <FcVideoFile></FcVideoFile>   Subir Video
                                                                 </label>
+                                                            {loading&&<label>Cargando Video</label>}
                                                             </div>
                                                             
-                                                        </div>
-                                                    :<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>}
+                                                    </div>
+                                                    :<iframe class="embed-responsive-item" src={newVideo.videoUrl} allowfullscreen></iframe>}
                                             </div>}
 
                             </div>
