@@ -153,7 +153,7 @@ const Dashboard=({tryLogin}) =>{
         read();
                       
        
-    }, [videos]);
+    }, []);
 
     
         return (
@@ -198,6 +198,7 @@ const Dashboard=({tryLogin}) =>{
                                 <select className="entry" id="findcountry"  ref={findCountryRef}
                                         onChange={()=>{
                                             findCountry(findCountryRef.current.value);
+                                            findCategoryRef.current.value=''
                                                                 
                                         }}>
                                         <option value="" disabled selected hidden>Busque recetas de un país</option>
@@ -210,6 +211,7 @@ const Dashboard=({tryLogin}) =>{
                                 <select className="entry" id="findcategory"  ref={findCategoryRef}
                                         onChange={()=>{
                                             findCategory(findCategoryRef.current.value);
+                                            findCountryRef.current.value=''
                                                             
                                         }}>
                                         <option value="" disabled selected hidden>Busque recetas de una categoría</option>
